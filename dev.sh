@@ -1,0 +1,1 @@
+docker-compose --project-name SFC-DEV -f docker-compose.dev.yml up --build

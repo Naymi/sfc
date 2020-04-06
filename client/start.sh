@@ -1,0 +1,1 @@
+docker-compose --project-name sfc up --build -d

@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+  server:
+    depends_on:
+      - db
+    links:
+      - db:db
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    env_file: .env
+    volumes:
+      - ./src:/usr/bin/app/src
+    ports:
+      - 4000:3000
+
+  db:
+    image: mysql
+    env_file: .env.docker-db

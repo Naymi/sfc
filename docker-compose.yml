@@ -1,0 +1,29 @@
+version: "3.7"
+
+services:
+  server:
+    depends_on:
+      - db
+    links:
+      - db:db
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    env_file: ./server/.env
+    ports:
+      - 4000:3000
+
+  db:
+    image: mysql
+    env_file: ./server/.env.docker-db
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    depends_on:
+      - server
+    links:
+      - server:backend
+    ports:
+      - 80:80
