@@ -1,10 +1,9 @@
-import express, { Request, Response } from "express"
+import express from "express"
 import cors from "cors"
 import authRouter from "./route/auth"
 import exceptionHandler from "./middlewares/exceptionHandler"
 import userRouter from "./route/user"
 import jwtAuth from "./middlewares/jwtAuth"
-import passport from "./middlewares/passport"
 import { sequelize } from "./db"
 require("dotenv").config()
 
