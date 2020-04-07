@@ -1,8 +1,7 @@
-import React from "react"
+import React, { useState } from "react"
 import { Formik } from "formik"
 import { Form, Button } from "react-bootstrap"
 import JoditEditor from "jodit-react"
-// @ts-ignore
 import MaterialIcon from "material-icons-react"
 const joditConf = { readonly: false }
 function ChangePostForm({
@@ -12,15 +11,16 @@ function ChangePostForm({
   defaultValue?: { content: string; title: string }
   onSubmit?: (data: { title: string; content: string }) => Promise<boolean>
 }) {
+  const { title, content: defaultContent } = defaultValue
+  const [content, setContent] = useState(defaultContent)
   return (
     <Formik
-      initialValues={defaultValue}
+      initialValues={{ title }}
       onSubmit={(data, { setSubmitting }) => {
-        onSubmit(data).then((r) => setSubmitting(r))
+        onSubmit({ ...data, content }).then((r) => setSubmitting(r))
       }}
     >
       {({
-        setValues,
         values,
         errors,
         touched,
@@ -44,23 +44,13 @@ function ChangePostForm({
           <br />
           <label>
             <span>Content</span>
-            {/* <Form.Control
-              as="textarea"
-              rows="3"
-              name="content"
-              required
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.content}
-            /> */}
             <JoditEditor
               config={joditConf}
               onBlur={(content) => {
-                setValues({ ...values, content })
+                setContent(content)
               }}
-              value={values.content}
+              value={content}
             ></JoditEditor>
-            {errors.content && touched.content && errors.content}
           </label>
           <br />
 

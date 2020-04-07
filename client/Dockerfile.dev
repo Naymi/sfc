@@ -6,7 +6,9 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN yarn
+RUN yarn --silent
+RUN yarn global add react-scripts --silent
+ENV PATH /app/node_modules/.bin:$PATH
 
 VOLUME /usr/src/app
 
