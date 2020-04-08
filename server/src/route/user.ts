@@ -9,11 +9,9 @@ const userRouter = Router()
 userRouter.get(
   "/",
   asyncHandler(async (req: Request, res: Response) => {
-    const user =
-      // @ts-ignore
-      await User.findByPk(req.user.id, {
-        attributes: ["login", "id"],
-      })
+    const user = await User.findByPk(req.userId, {
+      attributes: ["login", "id"],
+    })
     if (user) {
       return res.json(user)
     }
