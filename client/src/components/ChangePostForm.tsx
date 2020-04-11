@@ -1,65 +1,49 @@
 import React, { useState } from "react"
-import { Formik } from "formik"
 import { Form, Button } from "react-bootstrap"
 import JoditEditor from "jodit-react"
 import MaterialIcon from "material-icons-react"
+import { useForm, Controller } from "react-hook-form"
 const joditConf = { readonly: false }
+interface FormData {
+  title: string
+  content: string
+}
 function ChangePostForm({
   onSubmit = async () => true,
-  defaultValue = { title: "", content: "" },
+  defaultValue: defaultValues = { title: "", content: "" },
 }: {
   defaultValue?: { content: string; title: string }
   onSubmit?: (data: { title: string; content: string }) => Promise<boolean>
 }) {
-  const { title, content: defaultContent } = defaultValue
-  const [content, setContent] = useState(defaultContent)
+  const { register, handleSubmit, control } = useForm<FormData>({
+    defaultValues,
+  })
   return (
-    <Formik
-      initialValues={{ title }}
-      onSubmit={(data, { setSubmitting }) => {
-        onSubmit({ ...data, content }).then((r) => setSubmitting(r))
-      }}
+    <Form
+      onSubmit={handleSubmit((v) => {
+        onSubmit(v)
+      })}
     >
-      {({
-        values,
-        errors,
-        touched,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        isSubmitting,
-      }) => (
-        <Form onSubmit={handleSubmit}>
-          <label>
-            <span>Title</span>
-            <Form.Control
-              name="title"
-              required
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.title}
-            />
-            {errors.title && touched.title && errors.title}
-          </label>
-          <br />
-          <label>
-            <span>Content</span>
-            <JoditEditor
-              config={joditConf}
-              onBlur={(content) => {
-                setContent(content)
-              }}
-              value={content}
-            ></JoditEditor>
-          </label>
-          <br />
+      <label>
+        <span>Title</span>
+        <Form.Control name="title" ref={register} />
+      </label>
+      <br />
+      <label>
+        <span>Content</span>
+        <Controller
+          // @ts-ignore
+          as={<JoditEditor config={joditConf} />}
+          name="content"
+          control={control}
+        ></Controller>
+      </label>
+      <br />
 
-          <Button type="submit" disabled={isSubmitting}>
-            <MaterialIcon icon="save" color="#fff"></MaterialIcon>
-          </Button>
-        </Form>
-      )}
-    </Formik>
+      <Button type="submit">
+        <MaterialIcon icon="save" color="#fff"></MaterialIcon>
+      </Button>
+    </Form>
   )
 }
 
